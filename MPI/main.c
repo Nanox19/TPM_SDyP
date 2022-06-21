@@ -7,9 +7,9 @@
 ///#include <unistd.h>
 
 
-#define N 1500
+#define N 150
 #define CICLOS 5
-#define SEMANAS 1200
+#define SEMANAS 240
 
 #define BLANCO 0
 #define AZUL 1
@@ -49,14 +49,11 @@ void CopiarDatos(Celda** estado_viejo, Celda** estado_actual){
             estado_viejo[i][j]=estado_actual[i][j];
         }
     }
-
 }void CopiarDatos2(Celda** estado_viejo, Celda** estado_actual){
   **estado_viejo=**estado_actual;
 }
 void CopiarDatos3(Celda** estado_viejo, Celda** estado_actual){
-
         memcpy((*estado_viejo), (*estado_actual), sizeof(Celda)*n*n);
-
 }*/
 
 float generador_Uniforme(int random, int a, int b){
@@ -561,17 +558,13 @@ int main(int argc, char **argv) {
                     }
                     else{
                         if(id_process==num_process-1){
-
                             printf("\nESTADO de la submatriz del Proceso %d:\n",id_process);
                             VisualizarMatriz(SubMatriz_actual,2,div+2);
-
                             }
                             else{
-
                             printf("\nESTADO de la submatriz del Proceso %d:\n",id_process);
                             
                             VisualizarMatriz(SubMatriz_actual,2,div+2);
-
                             }
                         }*/
                     

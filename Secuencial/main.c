@@ -4,17 +4,10 @@
 #include <string.h>
 
 
-#define n 1500
+#define n 150
 #define CICLOS 5
-#define SEMANAS 1200
+#define SEMANAS 240
 
-/*typedef enum {
-    BLANCO=0,
-    AZUL=1,
-    ROJO=2,
-    NARANJA=3,
-    VERDE=4,
-}Estado;*/
 enum Estado {BLANCO=0,AZUL=1,ROJO=2,NARANJA=3,VERDE=4};
 typedef struct {
     enum Estado estado;
@@ -40,7 +33,7 @@ Celda ** Crear_Matriz(){
     return Matriz;
 }
 
-
+/*
 void CopiarDatos(Celda** estado_viejo, Celda** estado_actual){
     for(int i=0; i<n ; i++) {
         for (int j = 0; j < n; j++) {
@@ -55,7 +48,7 @@ void CopiarDatos3(Celda** estado_viejo, Celda** estado_actual){
 
         memcpy((*estado_viejo), (*estado_actual), sizeof(Celda)*n*n);
 
-}
+}*/
 
 float generador_Uniforme(int random, int a, int b){
     float resultado=((float)(random %(b-a+1) + a)/100.0f);
@@ -436,15 +429,7 @@ int main() {
         printf("-----------------------------------------------\n");
         tiempo_total+=duracion;
         duracion=0;
-       /* gettimeofday(&tiempoFinal, NULL);
-        //milisengundos
-        sumaTiempo = (tiempoFinal.tv_sec - tiempoInicial.tv_sec) * 1000.0 + (tiempoFinal.tv_usec - tiempoInicial.tv_usec) / 1000.0;
-        tiempoTotal+= sumaTiempo;
-        sumaTiempo = 0;
-        printf("\n---------------------------------------------\n");
-        printf("--------------tiempos de la %d-----------------\n",j+1);
-        printf("Tiempo total: %f milisegundos.\n",tiempoTotal);
-        printf("-----------------------------------------------\n");*/
+
     }
     promedio=tiempo_total/CICLOS;
     printf("\n---------------------------------------------\n");
@@ -452,12 +437,6 @@ int main() {
     printf("Tiempo Total: %lf segundos.\n",tiempo_total);
     printf("Tiempo promedio: %lf segundos.\n",promedio);
     printf("-----------------------------------------------\n");
-    /*promedio = tiempoTotal / CICLOS;
-        printf("\n---------------------------------------------\n");
-        printf("------Finalizado ciclo de %d ejecuciones--------\n",CICLOS);
-        printf("Tiempo promedio: %f milisegundos.\n",promedio);
-        printf("-----------------------------------------------\n");*/
-
 
     free((void*)Estado_actual);
     free((void*)Estado_siguiente);
