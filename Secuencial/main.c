@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-#define n 2000
+#define n 1500
 #define CICLOS 5
 #define SEMANAS 1200
 
@@ -399,8 +399,8 @@ int main() {
         srand(((rand()+rand_aux)*13)*7);
         start=clock();
         init(Estado_actual);
-        printf("ESTADO INICIAL:\n");
-        VisualizarMatriz(Estado_actual);
+        /*printf("ESTADO INICIAL:\n");
+        VisualizarMatriz(Estado_actual);*/
         for(int i = 0;i<SEMANAS;i++){
             srand(((rand()+rand_aux)*13)*7);
             procesarMatriz(Estado_actual,Estado_siguiente);
@@ -413,8 +413,8 @@ int main() {
             }*/
             ///system("pause");
             ///getchar();
-            VisualizarMatriz(Estado_siguiente);
-            printf("\n");
+           /* VisualizarMatriz(Estado_siguiente);
+            printf("\n");*/
             Aux=Estado_siguiente;
             Estado_siguiente=Estado_actual;
             Estado_actual=Aux;

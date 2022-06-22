@@ -4,9 +4,9 @@
 #include <string.h>
 #include <omp.h>
 
-#define n 150
+#define n 1500
 #define CICLOS 5
-#define SEMANAS 240
+#define SEMANAS 1200
 
 enum Estado {BLANCO=0,AZUL=1,ROJO=2,NARANJA=3,VERDE=4};
 typedef struct {

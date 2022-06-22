@@ -8,9 +8,9 @@
 ///#include <unistd.h>
 
 
-#define N 150
+#define N 1500
 #define CICLOS 5
-#define SEMANAS 240
+#define SEMANAS 1200
 
 #define BLANCO 0
 #define AZUL 1
