@@ -4,9 +4,9 @@
 #include <string.h>
 
 
-#define n 150
+#define n 20
 #define CICLOS 5
-#define SEMANAS 240
+#define SEMANAS 24
 
 enum Estado {BLANCO=0,AZUL=1,ROJO=2,NARANJA=3,VERDE=4};
 typedef struct {
@@ -50,8 +50,8 @@ void CopiarDatos3(Celda** estado_viejo, Celda** estado_actual){
 
 }*/
 
-float generador_Uniforme(int random, int a, int b){
-    float resultado=((float)(random %(b-a+1) + a)/100.0f);
+double generador_Uniforme(int random, int a, int b){
+    double resultado=((double)(random %(b-a+1) + a)/100.0f);
     return resultado;
 }
 
@@ -68,7 +68,7 @@ void init(Celda** estadoActual){
     Celda Celda_auxiliar;
     for(int i=0; i<n ; i++) {
         for (int j = 0; j < n; j++) {
-            float prob = generador_Uniforme(rand(),0,100);
+            double prob = generador_Uniforme(rand(),0,100);
             if(prob<=0.05){
                 Celda_auxiliar.estado=ROJO;
                 Celda_auxiliar.tiempo_contagio=(generadorUniformeENTEROS(rand(),0,7));
@@ -123,8 +123,8 @@ void init(Celda** estadoActual){
     }
 
 }
-float susceptibilidad(int edad,int heridas_A){
-    float suscep=0;
+double susceptibilidad(int edad,int heridas_A){
+    double suscep=0;
     if(edad<=156){
         suscep=0.35;
     }else{
@@ -141,7 +141,7 @@ float susceptibilidad(int edad,int heridas_A){
     return suscep;
 }
 
-float procesarContagio(float Porc_vecinosEnf ,float susceptibilidad){
+double procesarContagio(double Porc_vecinosEnf ,double susceptibilidad){
     return ((Porc_vecinosEnf + susceptibilidad)* 0.60) + 0.07;
 }
 
@@ -157,7 +157,7 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
 
     switch (celda.estado) {
         case ROJO:{
-            int probabilidad= generador_Uniforme(rand(),0,100);
+            double probabilidad= generador_Uniforme(rand(),0,100);
             if((celda.tiempo_contagio>4)&&(probabilidad<0.85)){
                 nuevaCelda.estado=AZUL;
             }
@@ -166,7 +166,7 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
         }
         case AZUL:{
             if(celda.tiempo_contagio>7){
-                int probabilidad= generador_Uniforme(rand(),0,100);
+                double probabilidad= generador_Uniforme(rand(),0,100);
                 if(celda.edad<156){
                     if(probabilidad<=0.03){
                         nuevaCelda.estado=BLANCO;
@@ -222,7 +222,7 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
             break;
         }
         case VERDE:{
-            float probabilidad=procesarContagio(((float)vecinosEnfermos/12),susceptibilidad(celda.edad,celda.herida_abierta));
+            double probabilidad=procesarContagio(((double)vecinosEnfermos/12),susceptibilidad(celda.edad,celda.herida_abierta));
             if(generador_Uniforme(rand(),0,100)<probabilidad){
                 nuevaCelda.estado=NARANJA;
                 nuevaCelda.tiempo_contagio=0;
@@ -384,9 +384,9 @@ int main() {
     double tiempo_total=0;
     double promedio;
    /* struct timeval tiempoInicial, tiempoFinal;
-    float tiempoTotal;
-    float sumaTiempo=0;
-    float promedio = 0;*/
+    double tiempoTotal;
+    double sumaTiempo=0;
+    double promedio = 0;*/
     Celda ** Estado_actual = Crear_Matriz();
     Celda ** Estado_siguiente = Crear_Matriz();
     Celda ** Aux;
@@ -399,8 +399,8 @@ int main() {
         srand(((rand()+rand_aux)*13)*7);
         start=clock();
         init(Estado_actual);
-        /*printf("ESTADO INICIAL:\n");
-        VisualizarMatriz(Estado_actual);*/
+        printf("ESTADO INICIAL:\n");
+        VisualizarMatriz(Estado_actual);
         for(int i = 0;i<SEMANAS;i++){
             srand(((rand()+rand_aux)*13)*7);
             procesarMatriz(Estado_actual,Estado_siguiente);
@@ -413,7 +413,8 @@ int main() {
             }*/
             ///system("pause");
             ///getchar();
-
+            VisualizarMatriz(Estado_siguiente);
+            printf("\n");
             Aux=Estado_siguiente;
             Estado_siguiente=Estado_actual;
             Estado_actual=Aux;
