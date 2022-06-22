@@ -4,7 +4,7 @@
 #include <string.h>
 #include <omp.h>
 
-#define n 1500
+#define n 800
 #define CICLOS 5
 #define SEMANAS 1200
 
@@ -53,9 +53,9 @@ void init(Celda** estadoActual){
     int i;
     int j;
     Celda Celda_auxiliar;
-    #pragma omp parallel for shared(estadoActual) private(i,Celda_auxiliar) num_threads(2)
+    #pragma omp parallel for shared(estadoActual) private(i,Celda_auxiliar) num_threads(4)
         for(i=0; i<n ; i++) {
-            #pragma omp parallel for shared(estadoActual) private(j,Celda_auxiliar) num_threads(3)
+            #pragma omp parallel for shared(estadoActual) private(j,Celda_auxiliar) num_threads(4)
             for (j = 0; j < n; j++) {
                 double prob = generador_Uniforme(rand(),0,100);
                 if(prob<=0.05){
@@ -246,9 +246,9 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
     int i;
     int j;
     ///Este for se puede paralelizar
-    //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) num_threads(2)
+    #pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) num_threads(4)
         for(i=0; i<n ; i++) {
-            //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(3)
+            #pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(4)
                 for (j = 0; j < n; j++) {
                     if(estadoActual[i][j].estado==VERDE){
                         ///________contardor____________///
