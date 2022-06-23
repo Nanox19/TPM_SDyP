@@ -246,7 +246,7 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
     int i;
     int j;
     ///Este for se puede paralelizar
-    #pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) collapse(2) num_threads(4)
+    #pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) collapse(2) num_threads(16)
         for(i=0; i<n ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(4)
                 for (j = 0; j < n; j++) {
