@@ -7,7 +7,7 @@
 ///#include <unistd.h>
 
 
-#define N 1500
+#define N 800
 #define CICLOS 5
 #define SEMANAS 1200
 
