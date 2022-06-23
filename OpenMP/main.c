@@ -54,8 +54,10 @@ void init(Celda** estadoActual){
     int j;
     Celda Celda_auxiliar;
     //#pragma omp parallel for shared(estadoActual) private(i,Celda_auxiliar) num_threads(4)
+    #pragma omp parallel for schedule(static,2) private(i) num_threads(2)
         for(i=0; i<n ; i++) {
             //#pragma omp parallel for shared(estadoActual) private(j,Celda_auxiliar) num_threads(4)
+            #pragma omp parallel for schedule(static,4) private(j) num_threads(4)
             for (j = 0; j < n; j++) {
                 double prob = generador_Uniforme(rand(),0,100);
                 if(prob<=0.05){
@@ -246,9 +248,11 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
     int i;
     int j;
     ///Este for se puede paralelizar
-    #pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) collapse(2) num_threads(16)
+    //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) collapse(2) num_threads(16)
+    #pragma omp parallel for schedule(static,2) private(i) num_threads(2)
         for(i=0; i<n ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(4)
+            #pragma omp parallel for schedule(static,4) private(j) num_threads(4)
                 for (j = 0; j < n; j++) {
                     if(estadoActual[i][j].estado==VERDE){
                         ///________contardor____________///
