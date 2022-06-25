@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-
+#include <math.h>
 
 #define n 2000
 #define CICLOS 5
@@ -21,34 +21,18 @@ typedef struct {
 
 Celda ** Crear_Matriz(){
     Celda **Matriz;
-    Matriz= (Celda **)malloc (n*sizeof(Celda *));
+    Matriz= (Celda **)malloc ((n+4)*sizeof(Celda *));
     Celda *Mf;
-    Mf = (Celda *) malloc(n*n*sizeof(Celda));
+    Mf = (Celda *) malloc((n+4)*(n+4)*sizeof(Celda));
 
     /*for (int i=0;i<n;i++)
         Matriz[i] = (Celda *) malloc (n*sizeof(Celda));*/
-    for (int i=0; i<n; i++) {
-        Matriz[i] = Mf + i*n;
+    for (int i=0; i<n+4; i++) {
+        Matriz[i] = Mf + i*(n+4);
     }
     return Matriz;
 }
 
-/*
-void CopiarDatos(Celda** estado_viejo, Celda** estado_actual){
-    for(int i=0; i<n ; i++) {
-        for (int j = 0; j < n; j++) {
-            estado_viejo[i][j]=estado_actual[i][j];
-        }
-    }
-
-}void CopiarDatos2(Celda** estado_viejo, Celda** estado_actual){
-  **estado_viejo=**estado_actual;
-}
-void CopiarDatos3(Celda** estado_viejo, Celda** estado_actual){
-
-        memcpy((*estado_viejo), (*estado_actual), sizeof(Celda)*n*n);
-
-}*/
 
 double generador_Uniforme(int random, int a, int b){
     double resultado=((double)(random %(b-a+1) + a)/100.0f);
@@ -61,13 +45,11 @@ int generadorUniformeENTEROS(int random,int a, int b) {
     return ret;
 }
 
-
-
-
 void init(Celda** estadoActual){
     Celda Celda_auxiliar;
-    for(int i=0; i<n ; i++) {
-        for (int j = 0; j < n; j++) {
+    for(int i=0; i<n+4 ; i++) {
+        for (int j = 0; j < n+4; j++) {
+            if(!((i==0)||(i==1)||(j==0)||(j==1)||(i==n+2)||(i==n+3)||(j==n+2)||(j==n+3))){
             double prob = generador_Uniforme(rand(),0,100);
             if(prob<=0.05){
                 Celda_auxiliar.estado=ROJO;
@@ -119,10 +101,23 @@ void init(Celda** estadoActual){
             /*printf("Estado Aux Estado %d\n",Celda_auxiliar.estado);
             printf("Estado celda %d\n",estadoActual[i][j].estado);*/
 
+            }else{
+                Celda_auxiliar.estado=BLANCO;
+                Celda_auxiliar.tiempo_contagio=-1;
+                Celda_auxiliar.tiempo_podado=-1;
+                Celda_auxiliar.edad=-1;
+                Celda_auxiliar.herida_abierta=-1;
+            }
+            estadoActual[i][j]=Celda_auxiliar;
         }
+
     }
 
+
 }
+
+
+
 double susceptibilidad(int edad,int heridas_A){
     double suscep=0;
     if(edad<=156){
@@ -140,7 +135,6 @@ double susceptibilidad(int edad,int heridas_A){
     }
     return suscep;
 }
-
 double procesarContagio(double Porc_vecinosEnf ,double susceptibilidad){
     return ((Porc_vecinosEnf + susceptibilidad)* 0.60) + 0.07;
 }
@@ -254,67 +248,30 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
     nuevaCelda.edad++;
     return nuevaCelda;
 }
-void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
-
-    for(int i=0; i<n ; i++) {
-        for (int j = 0; j < n; j++) {
+void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente,int inicio_F,int final_F,int inicio_C,int final_C){
+    int i;
+    int j;
+    for(i=inicio_F; i<final_F ; i++) {
+        for ( j = inicio_C; j < final_F; j++) {
             if(estadoActual[i][j].estado==VERDE){
-                ///________contardor____________///
-                int vecinosEnfermos = 0;
-                ///________flags____________///
-                int top1 = i + 1 < n;
-                int top2 = i + 2 < n;
-                int down1 = i - 1 > -1;
-                int down2 = i - 2 > -1;
-                int right1 = j + 1 < n;
-                int right2 = j + 2 < n;
-                int left1 = j - 1 > -1;
-                int left2 = j - 2 > -1;
-                ///________procesamiento____________///
-                if (top1) {
-                    vecinosEnfermos += estadoActual[i + 1][j].estado == ROJO;
-                    if (top2) {
-                        vecinosEnfermos += estadoActual[i + 2][j].estado == ROJO;
+                int vecinos[12]={estadoActual[i+1][j-1].estado,
+                                estadoActual[i+1][j].estado,
+                                estadoActual[i+1][j+1].estado,
+                                estadoActual[i][j-1].estado,
+                                estadoActual[i][j+1].estado,
+                                estadoActual[i-1][j-1].estado,
+                                estadoActual[i-1][j].estado,
+                                estadoActual[i-1][j+1].estado,
+                                estadoActual[i-2][j].estado,
+                                estadoActual[i+2][j].estado,
+                                estadoActual[i][j+2].estado,
+                                estadoActual[i][j-2].estado};
+                    int vecinosEnfermos = 0;
+
+                    for (int k = 0; k < 12; k++){  //se suma 2 por el arreglo de vecinos
+                           if (vecinos[k] == ROJO){ //si el vecino es ROJO (enfermo) sumo 1 a vecinos enfermos
+                            vecinosEnfermos++;;
                     }
-                }
-                if (right1) {
-                    vecinosEnfermos += estadoActual[i][j + 1].estado == ROJO;
-
-                    if (right2) {
-                        vecinosEnfermos += estadoActual[i][j + 2].estado == ROJO;
-
-                    }
-                }
-                if (down1) {
-                    vecinosEnfermos += estadoActual[i - 1][j].estado == ROJO;
-
-                    if (down2) {
-                        vecinosEnfermos += estadoActual[i - 2][j].estado == ROJO;
-
-                    }
-                }
-                if (left1) {
-                    vecinosEnfermos += estadoActual[i][j - 1].estado == ROJO;
-
-                    if (left2) {
-                        vecinosEnfermos += estadoActual[i][j - 2].estado == ROJO;
-
-                    }
-                }
-                if (top1 && right1) {
-                    vecinosEnfermos += estadoActual[i + 1][j + 1].estado == ROJO;
-
-                }
-                if (top1 && left1) {
-                    vecinosEnfermos += estadoActual[i + 1][j - 1].estado == ROJO;
-
-                }
-                if (down1 && right1) {
-                    vecinosEnfermos += estadoActual[i - 1][j + 1].estado == ROJO;
-
-                }
-                if (down1 && left1) {
-                    vecinosEnfermos += estadoActual[i - 1][j - 1].estado == ROJO;
                 }
                     estadoSiguiente[i][j]= procesarCelda(estadoActual[i][j],vecinosEnfermos);
                 }else{
@@ -323,6 +280,7 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
         }
     }
 }
+
 /*printf("\033[0m"); //Resets the text to default color
  * Red "\033[0;31m"
  * Green "\033[0;32m"
@@ -330,8 +288,8 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
  * White "\033[0;37m"
  * Yellow "\033[0;33m" no hay naranja jaja*/
 void VisualizarMatriz(Celda** matriz) { ///EL COLOR SOLO FUNCIONA EN LINUX, EN WINDOWS HAY QUE COMENTAR LOS PRINTS CON CODIGO DE ESCAPE  EJ: \033
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+    for (int i = 0; i < n+4; i++) {
+        for (int j = 0; j < n+4; j++) {
             char estado='-';
             switch (matriz[i][j].estado) {
                 case ROJO:{
@@ -369,7 +327,7 @@ void VisualizarMatriz(Celda** matriz) { ///EL COLOR SOLO FUNCIONA EN LINUX, EN W
                 printf("|[%c]|",estado);
             }
             printf("\033[0m");//Reestrablecer color
-            if(j==n-1){
+            if(j==n+3){
                 printf("\n");
             }
         }
@@ -392,29 +350,32 @@ int main() {
     Celda ** Aux;
     double rand_aux;
     srand(time(NULL));
-    
+    //omp_set_num_threads(8);
+    /*int tid ;
+    int nth;
+    tid = omp_get_thread_num ();
+    nth = omp_get_num_threads();*/
     int aux=1;
     for(int j = 0; j < CICLOS; j++){
         rand_aux=rand();
         srand(((rand()+rand_aux)*13)*7);
         start=clock();
         init(Estado_actual);
-        /*printf("ESTADO INICIAL:\n");
-        VisualizarMatriz(Estado_actual);*/
+        printf("ESTADO INICIAL:\n");
+        VisualizarMatriz(Estado_actual);
         for(int i = 0;i<SEMANAS;i++){
             srand(((rand()+rand_aux)*13)*7);
-            procesarMatriz(Estado_actual,Estado_siguiente);
-            /*if((i+1)%(SEMANAS/4)==0) {
+            procesarMatriz(Estado_actual,Estado_siguiente,2,n+2,2,n+2);
+            //if((i+1)%(SEMANAS/1)==0) {
                 printf("_______________semana %d___________________\n",i+1);
                 VisualizarMatriz(Estado_siguiente);
-                printf("Matriz procesada al %d % ",25*aux);
+                //printf("Matriz procesada al %d % ",25*aux);
                 printf("___________________________________________\n");
                 aux++;
-            }*/
+            //}
             ///system("pause");
             ///getchar();
-           /* VisualizarMatriz(Estado_siguiente);
-            printf("\n");*/
+
             Aux=Estado_siguiente;
             Estado_siguiente=Estado_actual;
             Estado_actual=Aux;
