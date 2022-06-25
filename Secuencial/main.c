@@ -361,18 +361,18 @@ int main() {
         srand(((rand()+rand_aux)*13)*7);
         start=clock();
         init(Estado_actual);
-        printf("ESTADO INICIAL:\n");
-        VisualizarMatriz(Estado_actual);
+        /*printf("ESTADO INICIAL:\n");
+        VisualizarMatriz(Estado_actual);*/
         for(int i = 0;i<SEMANAS;i++){
             srand(((rand()+rand_aux)*13)*7);
             procesarMatriz(Estado_actual,Estado_siguiente,2,n+2,2,n+2);
-            //if((i+1)%(SEMANAS/1)==0) {
+            /*if((i+1)%(SEMANAS/1)==0) {
                 printf("_______________semana %d___________________\n",i+1);
                 VisualizarMatriz(Estado_siguiente);
                 //printf("Matriz procesada al %d % ",25*aux);
                 printf("___________________________________________\n");
                 aux++;
-            //}
+            }*/
             ///system("pause");
             ///getchar();
 
