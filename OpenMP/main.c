@@ -4,7 +4,7 @@
 #include <string.h>
 #include <omp.h>
 
-#define n 800
+#define n 1500
 #define CICLOS 5
 #define SEMANAS 1200
 
