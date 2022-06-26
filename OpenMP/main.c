@@ -258,7 +258,7 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
         for(i=0; i<n ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(4)
            // #pragma omp parallel for schedule(static,4) private(j) num_threads(4)
-            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(4)
+            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
                 for (j = 0; j < n; j++) {
                     if(estadoActual[i][j].estado==VERDE){
                         ///________contardor____________///
