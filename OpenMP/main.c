@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -52,9 +51,9 @@ int generadorUniformeENTEROS(int random,int a, int b) {
 
 void init(Celda** estadoActual){
     Celda Celda_auxiliar;
-    #pragma parallel for private(i,j) collapse(2) num_threads(8)
+    #pragma parallel for private(i) collapse(2) num_threads(8)
     for(int i=0; i<n+4 ; i++) {
-        #pragma parallel for
+        #pragma parallel for private(j)
         for (int j = 0; j < n+4; j++) {
             if(!((i==0)||(i==1)||(j==0)||(j==1)||(i==n+2)||(i==n+3)||(j==n+2)||(j==n+3))){
             double prob = generador_Uniforme(rand(),0,100);
@@ -370,18 +369,18 @@ int main() {
         srand(((rand()+rand_aux)*13)*7);
         start=clock();
         init(Estado_actual);
-        printf("ESTADO INICIAL:\n");
-        VisualizarMatriz(Estado_actual);
+        /*printf("ESTADO INICIAL:\n");
+        VisualizarMatriz(Estado_actual);*/
         for(int i = 0;i<SEMANAS;i++){
             srand(((rand()+rand_aux)*13)*7);
             procesarMatriz(Estado_actual,Estado_siguiente,2,n+2,2,n+2);
-            //if((i+1)%(SEMANAS/1)==0) {
+            /*if((i+1)%(SEMANAS/1)==0) {
                 printf("_______________semana %d___________________\n",i+1);
                 VisualizarMatriz(Estado_siguiente);
                 //printf("Matriz procesada al %d % ",25*aux);
                 printf("___________________________________________\n");
                 aux++;
-            //}
+            }*/
             ///system("pause");
             ///getchar();
 
@@ -413,3 +412,4 @@ int main() {
     free((void*)Estado_siguiente);
     return 0;
 }
+
