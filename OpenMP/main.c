@@ -3,8 +3,8 @@
 #include <time.h>
 #include <string.h>
 #include <omp.h>
-
-#define n 1500
+#include <math.h>
+#define n 800
 #define CICLOS 5
 #define SEMANAS 1200
 
@@ -247,12 +247,18 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
 void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente){
     int i;
     int j;
+    int div_tareas_1;
+    int div2_tareas_2;
+    div_tareas_1 = floor(n/3); // Divido en 3 partes siempre
+    div2_tareas_2 = floor(n/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
     ///Este for se puede paralelizar
     //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i) collapse(2) num_threads(16)
-    #pragma omp parallel for schedule(static,2) private(i) num_threads(2)
+    //#pragma omp parallel for schedule(static,2) private(i) num_threads(2)
+    #pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
         for(i=0; i<n ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(4)
-            #pragma omp parallel for schedule(static,4) private(j) num_threads(4)
+           // #pragma omp parallel for schedule(static,4) private(j) num_threads(4)
+            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
                 for (j = 0; j < n; j++) {
                     if(estadoActual[i][j].estado==VERDE){
                         ///________contardor____________///
