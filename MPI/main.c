@@ -4,8 +4,6 @@
 #include <string.h>
 #include <mpi.h>
 #include <math.h>
-///#include <unistd.h>
-
 
 #define N 2000
 #define CICLOS 5
