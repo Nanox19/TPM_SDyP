@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-#define n 500
+#define n 2000
 #define CICLOS 5
 #define SEMANAS 1200
 
