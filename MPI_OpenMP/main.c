@@ -5,8 +5,10 @@
 #include <mpi.h>
 #include <math.h>
 #include <omp.h>
+///#include <unistd.h>
 
-#define N 800
+
+#define N 1500
 #define CICLOS 5
 #define SEMANAS 1200
 
@@ -79,9 +81,13 @@ void init(Celda** estadoActual , int inicio, int final){
     Celda Celda_auxiliar;
     int i;
     int j;
-    #pragma omp parallel for shared(estadoActual) private(i,j,Celda_auxiliar) num_threads(3)
+    int div_tareas_1;
+    int div2_tareas_2;
+    div_tareas_1 = floor(n/3); // Divido en 3 partes siempre
+    div2_tareas_2 = floor(n/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
+    //#pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
     for(i=inicio; i<final ; i++) {
-        //#pragma omp parallel for shared(estadoActual) private(i,j,Celda_auxiliar) num_threads(2)
+        //#pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
             for (j = 0; j < N; j++) {
                 double prob = generador_Uniforme(rand(),0,100);
                 if(prob<=0.05){
@@ -300,9 +306,15 @@ Celda procesarCelda(Celda celda, int vecinosEnfermos){
 void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente,int inicio, int final, int limite){
     int i;
     int j;
+    int div_tareas_1;
+    int div2_tareas_2;
+    div_tareas_1 = floor(n/3); // Divido en 3 partes siempre
+    div2_tareas_2 = floor(n/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
     //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i,j) num_threads(3)
+    #pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
         for(i=inicio; i<final ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(2)
+            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
                 for (j = 0; j < N; j++) {
                     if(estadoActual[i][j].estado==VERDE){
 
