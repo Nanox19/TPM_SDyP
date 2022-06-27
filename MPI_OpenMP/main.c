@@ -83,8 +83,8 @@ void init(Celda** estadoActual , int inicio, int final){
     int j;
     int div_tareas_1;
     int div2_tareas_2;
-    div_tareas_1 = floor(n/3); // Divido en 3 partes siempre
-    div2_tareas_2 = floor(n/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
+    div_tareas_1 = floor(N/3); // Divido en 3 partes siempre
+    div2_tareas_2 = floor(N/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
     //#pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
     for(i=inicio; i<final ; i++) {
         //#pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
@@ -308,8 +308,8 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente,int inicio, int
     int j;
     int div_tareas_1;
     int div2_tareas_2;
-    div_tareas_1 = floor(n/3); // Divido en 3 partes siempre
-    div2_tareas_2 = floor(n/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
+    div_tareas_1 = floor(N/3); // Divido en 3 partes siempre
+    div2_tareas_2 = floor(N/8); // divido por el numero de threads y le pongo dynamic si alguno de los threahs termina antes.
     //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(i,j) num_threads(3)
     #pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
         for(i=inicio; i<final ; i++) {
