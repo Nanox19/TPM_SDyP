@@ -8,7 +8,7 @@
 ///#include <unistd.h>
 
 
-#define N 2000
+#define N 800
 #define CICLOS 5
 #define SEMANAS 1200
 
@@ -314,7 +314,7 @@ void procesarMatriz(Celda** estadoActual,Celda** estadoSiguiente,int inicio, int
     #pragma omp parallel for schedule(dynamic,div_tareas_1) private(i) num_threads(2)
         for(i=inicio; i<final ; i++) {
             //#pragma omp parallel for shared(estadoActual,estadoSiguiente) private(j) num_threads(2)
-            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(4)
+            #pragma omp parallel for schedule(dynamic,div2_tareas_2) private(j) num_threads(8)
                 for (j = 0; j < N; j++) {
                     if(estadoActual[i][j].estado==VERDE){
 
